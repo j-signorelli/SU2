@@ -364,6 +364,10 @@ void CFlowIncOutput::SetVolumeOutputFields(CConfig *config){
   }
 
   AddCommonFVMOutputs(config);
+
+  if (config->GetTime_Domain()) {
+    SetTimeAveragedFields();
+  }
 }
 
 void CFlowIncOutput::LoadVolumeData(CConfig *config, CGeometry *geometry, CSolver **solver, unsigned long iPoint){
@@ -431,13 +435,17 @@ void CFlowIncOutput::LoadVolumeData(CConfig *config, CGeometry *geometry, CSolve
   LoadVolumeData_Scalar(config, solver, geometry, iPoint);
 
   // Streamwise Periodicity
-  if(streamwisePeriodic) {
+  if (streamwisePeriodic) {
     SetVolumeOutputValue("RECOVERED_PRESSURE", iPoint, Node_Flow->GetStreamwise_Periodic_RecoveredPressure(iPoint));
     if (heat && streamwisePeriodic_temperature)
       SetVolumeOutputValue("RECOVERED_TEMPERATURE", iPoint, Node_Flow->GetStreamwise_Periodic_RecoveredTemperature(iPoint));
   }
 
   LoadCommonFVMOutputs(config, geometry, iPoint);
+
+  if (config->GetTime_Domain()) {
+    LoadTimeAveragedData(iPoint, Node_Flow);
+  }
 }
 
 bool CFlowIncOutput::SetInit_Residuals(const CConfig *config){

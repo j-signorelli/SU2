@@ -5237,7 +5237,11 @@ void CEulerSolver::BC_Riemann(CGeometry *geometry, CSolver **solver_container,
       case STATIC_PRESSURE:
 
         /*--- Retrieve the static pressure for this boundary. ---*/
-        Pressure_e = config->GetRiemann_Var1(Marker_Tag);
+        if (config->GetMarker_All_PyCustom(val_marker)) // If Python custom, get (should be) specified pressures
+            Pressure_e = geometry->GetCustomBoundaryRiemannPressure(val_marker, iVertex);
+        else
+            Pressure_e = config->GetRiemann_Var1(Marker_Tag);
+            
         Pressure_e /= config->GetPressure_Ref();
         Density_e = Density_i;
 
@@ -5250,7 +5254,6 @@ void CEulerSolver::BC_Riemann(CGeometry *geometry, CSolver **solver_container,
         }
         Energy_e = GetFluidModel()->GetStaticEnergy() + 0.5*Velocity2_e;
         break;
-
       default:
         SU2_MPI::Error("Invalid Riemann input!", CURRENT_FUNCTION);
         break;

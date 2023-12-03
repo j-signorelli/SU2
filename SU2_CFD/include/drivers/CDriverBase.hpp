@@ -549,6 +549,17 @@ class CDriverBase {
     main_geometry->SetCustomBoundaryHeatFlux(iMarker, iVertex, WallHeatFlux);
   }
 
+    /*!
+   * \brief Set the Riemann static pressure at a vertex on a specified marker (MARKER_PYTHON_CUSTOM).
+   * \note Temporary implementation for testing purposes
+   * \param[in] iMarker - Marker identifier.
+   * \param[in] iVertex - Vertex identifier.
+   * \param[in] WallHeatFlux - Value of the static pressure
+   */
+  inline void SetMarkerCustomRiemannPressure(unsigned short iMarker, unsigned long iVertex, passivedouble StaticPressure) {
+    main_geometry->SetCustomBoundaryRiemannPressure(iMarker, iVertex, StaticPressure);
+  }
+
   /*!
    * \brief Selects zone to be used for python driver operations.
    * \param[in] iZone - Zone identifier.

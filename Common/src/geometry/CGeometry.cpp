@@ -92,6 +92,13 @@ CGeometry::~CGeometry() {
     delete[] CustomBoundaryTemperature;
   }
 
+  if (CustomBoundaryRiemannPressure != nullptr) {
+    for (iMarker = 0; iMarker < nMarker; iMarker++) {
+      delete[] CustomBoundaryRiemannPressure [iMarker];
+    }
+    delete[] CustomBoundaryRiemannPressure ;
+  }
+
   /*--- Delete structures for MPI point-to-point communication. ---*/
 
   delete[] bufD_P2PRecv;
@@ -2401,6 +2408,7 @@ void CGeometry::UpdateCustomBoundaryConditions(CGeometry** geometry_container, C
             geometry_container[iMGlevel]->SetMultiGridWallTemperature(geometry_container[iMGfine], iMarker);
             break;
           // Inlet flow handled in solver class.
+          // Riemann outlet pressure NOT YET IMPLEMENTED for multigrid
           default:
             break;
         }

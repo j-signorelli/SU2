@@ -128,6 +128,7 @@ class CGeometry {
   short* Marker_All_SendRecv{nullptr}; /*!< \brief MPI Marker. */
   su2double** CustomBoundaryTemperature{nullptr};
   su2double** CustomBoundaryHeatFlux{nullptr};
+  su2double** CustomBoundaryRiemannPressure{nullptr};
 
   /*--- Create vectors and distribute the values among the different planes queues ---*/
 
@@ -1628,6 +1629,26 @@ class CGeometry {
   inline void SetCustomBoundaryHeatFlux(unsigned short val_marker, unsigned long val_vertex,
                                         su2double val_customBoundaryHeatFlux) {
     CustomBoundaryHeatFlux[val_marker][val_vertex] = val_customBoundaryHeatFlux;
+  }
+
+    /*!
+   * \brief Get the value of the customized Riemann static pressure at a specified vertex on a specified marker.
+   * \param[in] val_marker - Marker value
+   * \param[in] val_vertex - Boundary vertex value
+   */
+  inline su2double GetCustomBoundaryRiemannPressure(unsigned short val_marker, unsigned long val_vertex) const {
+    return CustomBoundaryRiemannPressure[val_marker][val_vertex];
+  }
+
+  /*!
+   * \brief Set the value of the customized Riemann static pressure at a specified vertex on a specified marker.
+   * \param[in] val_marker - Marker value
+   * \param[in] val_vertex - Boundary vertex value
+   * \param[in] val_customBoundaryRiemannPressure - Value of the Riemann static pressure
+   */
+  inline void SetCustomBoundaryRiemannPressure(unsigned short val_marker, unsigned long val_vertex,
+                                        su2double val_customBoundaryRiemannPressure) {
+    CustomBoundaryRiemannPressure[val_marker][val_vertex] = val_customBoundaryRiemannPressure;
   }
 
   /*!

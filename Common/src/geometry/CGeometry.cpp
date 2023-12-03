@@ -2362,11 +2362,14 @@ void CGeometry::SetCustomBoundary(CConfig* config) {
    * Custom values are initialized with the default values specified in the config (avoiding non physical values) ---*/
   CustomBoundaryTemperature = new su2double*[nMarker];
   CustomBoundaryHeatFlux = new su2double*[nMarker];
+  CustomBoundaryRiemannPressure = new su2double*[nMarker];
 
   for (iMarker = 0; iMarker < nMarker; iMarker++) {
     Marker_Tag = config->GetMarker_All_TagBound(iMarker);
     CustomBoundaryHeatFlux[iMarker] = nullptr;
     CustomBoundaryTemperature[iMarker] = nullptr;
+    CustomBoundaryRiemannPressure[iMarker] = nullptr;
+
     if (config->GetMarker_All_PyCustom(iMarker)) {
       switch (config->GetMarker_All_KindBC(iMarker)) {
         case HEAT_FLUX:
@@ -2383,6 +2386,13 @@ void CGeometry::SetCustomBoundary(CConfig* config) {
           break;
         case INLET_FLOW:
           // This case is handled in the solver class.
+          break;
+        case RIEMANN_BOUNDARY:// Initialize
+          CustomBoundaryRiemannPressure[iMarker] = new su2double[nVertex[iMarker]];
+          for (iVertex = 0; iVertex < nVertex[iMarker]; iVertex++) {
+            CustomBoundaryRiemannPressure[iMarker][iVertex] = config->GetRiemann_Var1(Marker_Tag);
+          }
+          break;
           break;
         default:
           cout << "WARNING: Marker " << Marker_Tag << " is not customizable. Using default behavior." << endl;
